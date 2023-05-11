@@ -24,6 +24,7 @@ import com.reactnativenavigation.viewcontrollers.child.ChildControllersRegistry;
 import com.reactnativenavigation.viewcontrollers.modal.ModalStack;
 import com.reactnativenavigation.viewcontrollers.navigator.Navigator;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,8 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     private PermissionListener mPermissionListener;
 
     protected Navigator navigator;
+
+    private OnBackPressedCallback callback;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         );
         navigator.bindViews();
         getReactGateway().onActivityCreated(this);
+        setBackPressedCallback();
     }
 
     @Override
@@ -97,7 +101,9 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     @Override
     public void invokeDefaultOnBackPressed() {
         if (!navigator.handleBack(new CommandListenerAdapter())) {
-            super.onBackPressed();
+            callback.setEnabled(false);
+            NavigationActivity.super.onBackPressed();
+            callback.setEnabled(true);
         }
     }
 
@@ -105,11 +111,6 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         getReactGateway().onActivityResult(this, requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onBackPressed() {
-        getReactGateway().onBackPressed();
     }
 
     @Override
@@ -155,5 +156,15 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
 
     public void onCatalystInstanceDestroy() {
         runOnUiThread(() -> navigator.destroyViews());
+    }
+
+    private void setBackPressedCallback() {
+        callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                getReactGateway().onBackPressed();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 }

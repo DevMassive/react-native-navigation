@@ -17,6 +17,7 @@ const {
   HIDE_TABS_PUSH_BTN,
   SECOND_TAB_BAR_BTN,
   SET_BADGE_BTN,
+  STATIC_EVENTS_OVERLAY_BTN,
 } = testIDs;
 
 export default class SecondBottomTabScreen extends React.Component<NavigationComponentProps> {
@@ -46,7 +47,8 @@ export default class SecondBottomTabScreen extends React.Component<NavigationCom
         <Button label="Push BottomTabs" testID={PUSH_BTN} onPress={this.pushBottomTabs} />
         <Button label="Push Modal" testID={MODAL_BTN} onPress={this.pushModal} />
         <Button label="SetBadge" testID={SET_BADGE_BTN} onPress={this.setBadge} />
-
+        <Button label="Show Notification Dot" onPress={() => this.setNotificationDot(true)} />
+        <Button label="Hide Notification Dot" onPress={() => this.setNotificationDot(false)} />
         <Button label="Push ScrollView" onPress={this.pushScrollView} />
         <Button
           label="SideMenu inside BottomTabs"
@@ -57,6 +59,11 @@ export default class SecondBottomTabScreen extends React.Component<NavigationCom
           label="Hide Tabs on Push"
           testID={HIDE_TABS_PUSH_BTN}
           onPress={this.hideTabsOnPush}
+        />
+        <Button
+          label="Show Overlay"
+          testID={STATIC_EVENTS_OVERLAY_BTN}
+          onPress={this.showEventsOverlay}
         />
       </Root>
     );
@@ -80,6 +87,15 @@ export default class SecondBottomTabScreen extends React.Component<NavigationCom
         badge: 'Badge',
       },
     });
+
+  setNotificationDot = (visible: boolean) => {
+    Navigation.mergeOptions(this, {
+      bottomTab: {
+        ...(visible ? { badge: '' } : {}),
+        dotIndicator: { visible, color: 'green' },
+      },
+    });
+  };
 
   pushBottomTabs = () =>
     Navigation.push(this, {
@@ -138,4 +154,17 @@ export default class SecondBottomTabScreen extends React.Component<NavigationCom
       },
     });
   };
+
+  showEventsOverlay = () =>
+    Navigation.showOverlay(
+      Screens.EventsOverlay,
+      {
+        overlay: {
+          interceptTouchOutside: false,
+        },
+      },
+      {
+        showOnTop: true,
+      }
+    );
 }
