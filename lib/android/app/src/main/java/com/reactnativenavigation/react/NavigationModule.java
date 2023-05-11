@@ -59,9 +59,21 @@ public class NavigationModule extends ReactContextBaseJavaModule {
             @Override
             public void onHostPause() {
                 super.onHostPause();
-                UiUtils.runOnMainThread(() -> {
-                    if (activity() != null) navigator().onHostPause();
-                });
+                // https://github.com/wix/react-native-navigation/issues/7419
+                // codepushの対応として、UiUtils.runOnMainThread内で実行するようにしているが、
+                // けっこうな数crashするやめる。activityがあること保証されないからな
+
+                // → これでもactivityがなくてクラッシュする。。。謎
+                // コード追った感じ:
+                // - まず起動直後にpauseが呼ばれるのが謎。開いた直後にバックグラウンドにしている？
+                // - そのときでもgetCurrentActivityはnullになることはなさそうにみえる(weak refだが、ここではfinishしてないはず)
+                // しょうがないのでactivity取得できるかチェックして、できなかったら無視する。無視していいのかは全く不明。
+                // いくつかissueもあるのでカスタマイズが原因というわけではなさそうな気配。
+                // https://github.com/wix/react-native-navigation/issues/7531
+                // → 本流でも修正されたが非同期で呼んでいるのが不安なので採用せず https://github.com/wix/react-native-navigation/pull/7812
+                if (activity() != null) {
+                    navigator().onHostPause();
+                }
             }
 
             @Override
@@ -74,7 +86,9 @@ public class NavigationModule extends ReactContextBaseJavaModule {
                         navigator().getChildRegistry(),
                         ((NavigationApplication) activity().getApplication()).getExternalComponents()
                 );
-                UiUtils.runOnMainThread(() -> navigator().onHostResume());
+
+                // pauseを即時実行にしたので、resumeも即時実行にする（じゃないと順番が前後しそうじゃん？）
+                navigator().onHostResume();
             }
         });
     }

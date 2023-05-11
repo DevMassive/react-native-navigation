@@ -10,10 +10,10 @@ import com.reactnativenavigation.react.CommandListener;
 import com.reactnativenavigation.utils.ScreenAnimationListener;
 import com.reactnativenavigation.viewcontrollers.viewcontroller.ViewController;
 
+import org.jetbrains.annotations.NotNull;
+
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-
-import org.jetbrains.annotations.NotNull;
 
 import static com.reactnativenavigation.utils.CoordinatorLayoutUtils.matchParentLP;
 
@@ -106,6 +106,7 @@ public class ModalPresenter {
             toAdd.attachView(toAdd == root ? rootLayout : modalsLayout, 0);
             toAdd.onViewDidAppear();
         }
+        toDismiss.onViewWillDisappear();
         Options options = toDismiss.resolveCurrentOptions(defaultOptions);
         if (options.animations.dismissModal.getExit().enabled.isTrueOrUndefined()) {
             modalAnimator.dismiss(toAdd, toDismiss, options.animations.dismissModal, new ScreenAnimationListener() {
