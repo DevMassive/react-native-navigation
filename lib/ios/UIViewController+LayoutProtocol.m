@@ -175,6 +175,11 @@
     [self.parentViewController componentDidAppear];
 }
 
+- (void)componentWillDisappear {
+    [self.presenter componentWillDisappear];
+    [self.parentViewController componentWillDisappear];
+}
+
 - (void)componentDidDisappear {
     [self.presenter componentDidDisappear];
     [self.parentViewController componentDidDisappear];

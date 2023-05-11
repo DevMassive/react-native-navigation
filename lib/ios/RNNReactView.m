@@ -3,6 +3,7 @@
 
 @implementation RNNReactView {
     BOOL _isAppeared;
+    BOOL _isWillAppeared;
 }
 #ifdef RCT_NEW_ARCH_ENABLED
 - (instancetype)initWithBridge:(RCTBridge *)bridge
@@ -50,11 +51,12 @@
 }
 
 - (void)componentWillAppear {
-    if (!_isAppeared) {
+    if (!_isWillAppeared) {
         [_eventEmitter sendComponentWillAppear:self.componentId
                                  componentName:self.moduleName
                                  componentType:self.componentType];
     }
+    _isWillAppeared = YES;
 }
 
 - (void)componentDidAppear {
@@ -65,6 +67,15 @@
     }
 
     _isAppeared = YES;
+}
+
+- (void)componentWillDisappear {
+    if (_isWillAppeared) {
+        [_eventEmitter sendComponentWillDisappear:self.componentId
+                                    componentName:self.moduleName
+                                    componentType:self.componentType];
+    }
+    _isWillAppeared = NO;
 }
 
 - (void)componentDidDisappear {
