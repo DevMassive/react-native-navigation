@@ -2,6 +2,7 @@ package com.reactnativenavigation.views.stack;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.reactnativenavigation.utils.UiUtils;
@@ -40,5 +41,18 @@ public class StackLayout extends CoordinatorLayout implements Component {
         return getChildCount() >= 2 &&
                getChildAt(1) instanceof Renderable &&
                ((Renderable) getChildAt(1)).isRendered();
+    }
+
+    // modal内に表示しているとき、dismiss中にタッチを後ろのappearingなviewに透過させるために追加
+    private boolean touchEnabled = true;
+    public void disableTouch() {
+        touchEnabled = false;
+    }
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (!touchEnabled && ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            return true;
+        }
+        return super.onInterceptTouchEvent(ev);
     }
 }

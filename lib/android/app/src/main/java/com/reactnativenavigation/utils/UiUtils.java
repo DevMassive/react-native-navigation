@@ -2,6 +2,7 @@ package com.reactnativenavigation.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
@@ -114,12 +115,26 @@ public class UiUtils {
         if (topBarHeight > 0) {
             return topBarHeight;
         }
-        final Resources resources = context.getResources();
-        final int resourceId = resources.getIdentifier("action_bar_size", "dimen", "android");
-        topBarHeight = resourceId > 0 ?
-                resources.getDimensionPixelSize(resourceId) :
-                dpToPx(context, DEFAULT_TOOLBAR_HEIGHT);
+
+        // 横向きにしてもtopbarの高さが細くならないバグがあるので、topbarの取得方法を変える
+        // warningについて: auto closableになったのはapi 31からなのでauto closeできないと思われる
+        final TypedArray styledAttributes = context.getTheme().obtainStyledAttributes(new int[]{android.R.attr.actionBarSize});
+        topBarHeight = (int) styledAttributes.getDimension(0, 0);
+        styledAttributes.recycle();
+
+        // 失敗したらRNNの元々の方法で取得
+        if (topBarHeight == 0) {
+            final Resources resources = context.getResources();
+            final int resourceId = resources.getIdentifier("action_bar_size", "dimen", "android");
+            topBarHeight = resourceId > 0 ?
+                    resources.getDimensionPixelSize(resourceId) :
+                    dpToPx(context, DEFAULT_TOOLBAR_HEIGHT);
+        }
         return topBarHeight;
+    }
+
+    public static void saveTopBarHeight(int height) {
+        topBarHeight = height;
     }
 
     public static int getBottomTabsHeight(Context context) {
