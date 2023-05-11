@@ -18,6 +18,8 @@ import com.reactnativenavigation.viewcontrollers.viewcontroller.RootPresenter;
 import com.reactnativenavigation.react.JsDevReloadHandler;
 import com.reactnativenavigation.react.ReactGateway;
 import com.reactnativenavigation.react.CommandListenerAdapter;
+import com.reactnativenavigation.utils.SystemUiUtils;
+import com.reactnativenavigation.utils.UiUtils;
 import com.reactnativenavigation.viewcontrollers.child.ChildControllersRegistry;
 import com.reactnativenavigation.viewcontrollers.modal.ModalStack;
 import com.reactnativenavigation.viewcontrollers.navigator.Navigator;
@@ -56,6 +58,8 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        SystemUiUtils.saveStatusBarHeight(0);
+        UiUtils.saveTopBarHeight(0);
         getReactGateway().onConfigurationChanged(this, newConfig);
         navigator.onConfigurationChanged(newConfig);
     }
