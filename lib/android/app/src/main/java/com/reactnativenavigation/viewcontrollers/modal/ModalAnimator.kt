@@ -73,6 +73,7 @@ open class ModalAnimator @JvmOverloads constructor(
                 set.playTogether(appearingAnimation, disappearingAnimation)
             } ?: set.playTogether(appearingAnimation)
             set.start()
+            appearing.view.alpha = 0f
         }
     }
 
@@ -80,24 +81,22 @@ open class ModalAnimator @JvmOverloads constructor(
         GlobalScope.launch(Dispatchers.Main.immediate) {
             if (runningAnimators.containsKey(disappearing)) {
                 runningAnimators[disappearing]?.cancel()
-                listener.onEnd()
-            } else {
-                val set = createDismissAnimator(disappearing, listener)
-                if (animationOptions.hasElementTransitions() && appearing != null) {
-                    setupDismissAnimationWithSharedElementTransition(disappearing, appearing, animationOptions, set)
-                } else {
-                    val appearingAnimation = if (appearing != null && animationOptions.enter.hasValue()) {
-                        animationOptions.enter.getAnimation(appearing.view)
-                    } else null
-                    val disappearingAnimation = if (animationOptions.exit.hasValue()) {
-                        animationOptions.exit.getAnimation(disappearing.view)
-                    } else getDefaultPopAnimation(disappearing.view)
-                    appearingAnimation?.let {
-                        set.playTogether(appearingAnimation, disappearingAnimation)
-                    } ?: set.playTogether(disappearingAnimation)
-                }
-                set.start()
             }
+            val set = createDismissAnimator(disappearing, listener)
+            if (animationOptions.hasElementTransitions() && appearing != null) {
+                setupDismissAnimationWithSharedElementTransition(disappearing, appearing, animationOptions, set)
+            } else {
+                val appearingAnimation = if (appearing != null && animationOptions.enter.hasValue()) {
+                    animationOptions.enter.getAnimation(appearing.view)
+                } else null
+                val disappearingAnimation = if (animationOptions.exit.hasValue()) {
+                    animationOptions.exit.getAnimation(disappearing.view)
+                } else getDefaultPopAnimation(disappearing.view)
+                appearingAnimation?.let {
+                    set.playTogether(appearingAnimation, disappearingAnimation)
+                } ?: set.playTogether(disappearingAnimation)
+            }
+            set.start()
         }
     }
 
