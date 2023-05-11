@@ -507,6 +507,11 @@ public class StackController extends ParentController<StackLayout> {
     }
 
     @Override
+    public void onViewWillDisappear() {
+        ((StackLayout) getView()).disableTouch();
+    }
+
+    @Override
     public int getTopInset(ViewController<?> child) {
         return presenter.getTopInset(resolveChildOptions(child));
     }

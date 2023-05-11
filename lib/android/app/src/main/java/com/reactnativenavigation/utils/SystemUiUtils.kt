@@ -1,11 +1,13 @@
 package com.reactnativenavigation.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.Rect
 import android.view.View
 import android.view.Window
 import androidx.annotation.ColorInt
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -21,22 +23,39 @@ object SystemUiUtils {
         private set
 
 
+    @SuppressLint("InternalInsetResource")
     @JvmStatic
     fun getStatusBarHeight(activity: Activity?): Int {
         val res = if (statusBarHeight > 0) {
             statusBarHeight
         } else {
+            // https://stackoverflow.com/questions/3407256/height-of-status-bar-in-android
+            // これだとタブレットで画面分割にして下側におくと、上側のheightも含まれてしまう。
+            // タブレットで下にタスクバーがでているものもその分が含まれてそう。
+//            statusBarHeight = activity?.let {
+//                val rectangle = Rect()
+//                val window: Window = activity.window
+//                window.decorView.getWindowVisibleDisplayFrame(rectangle)
+//                val statusBarHeight: Int = rectangle.top
+//                val contentView = window.findViewById<View>(Window.ID_ANDROID_CONTENT)
+//                contentView?.let {
+//                    val contentViewTop = contentView.top
+//                    abs(contentViewTop - statusBarHeight)
+//                }
+//            }
+//                ?: if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) STATUS_BAR_HEIGHT_M else STATUS_BAR_HEIGHT_L
+
+            // これだとステータスバーの高さであってカットアウトが含まれない
+//            statusBarHeight = activity?.resources
+//                ?.getIdentifier("status_bar_height", "dimen", "android")
+//                ?.takeIf { it > 0 }?.let {
+//                    activity.resources?.getDimensionPixelSize(it) ?: 0
+//                } ?: if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) STATUS_BAR_HEIGHT_M else STATUS_BAR_HEIGHT_L
+
             statusBarHeight = activity?.let {
-                val rectangle = Rect()
-                val window: Window = activity.window
-                window.decorView.getWindowVisibleDisplayFrame(rectangle)
-                val statusBarHeight: Int = rectangle.top
-                val contentView = window.findViewById<View>(Window.ID_ANDROID_CONTENT)
-                contentView?.let {
-                    val contentViewTop = contentView.top
-                    abs(contentViewTop - statusBarHeight)
-                }
-            } ?: STATUS_BAR_HEIGHT_M
+                ViewCompat.getRootWindowInsets(it.window.decorView)?.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout())?.top
+            }?: STATUS_BAR_HEIGHT_M
+
             statusBarHeight
         }
         return res
