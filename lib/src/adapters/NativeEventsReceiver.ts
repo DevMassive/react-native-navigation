@@ -3,6 +3,7 @@ import {
   ComponentWillAppearEvent,
   ComponentDidAppearEvent,
   ComponentDidDisappearEvent,
+  ComponentWillDisappearEvent,
   NavigationButtonPressedEvent,
   SearchBarUpdatedEvent,
   SearchBarCancelPressedEvent,
@@ -50,6 +51,12 @@ export class NativeEventsReceiver {
     callback: (event: ComponentDidAppearEvent) => void
   ): EmitterSubscription {
     return this.emitter.addListener('RNN.ComponentDidAppear', callback);
+  }
+
+  public registerComponentWillDisappearListener(
+    callback: (event: ComponentWillDisappearEvent) => void
+  ): EmitterSubscription {
+    return this.emitter.addListener('RNN.ComponentWillDisappear', callback);
   }
 
   public registerComponentDidDisappearListener(

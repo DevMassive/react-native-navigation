@@ -16,6 +16,11 @@ export interface ComponentDidAppearEvent extends ComponentEvent {
   componentType: ComponentType;
 }
 
+export interface ComponentWillDisappearEvent extends ComponentEvent {
+  componentName: string;
+  componentType: ComponentType;
+}
+
 export interface ComponentDidDisappearEvent extends ComponentEvent {
   componentName: string;
   componentType: ComponentType;

@@ -14,6 +14,7 @@ import {
   SearchBarUpdatedEvent,
   SearchBarCancelPressedEvent,
   ComponentEvent,
+  ComponentWillDisappearEvent,
   PreviewCompletedEvent,
   ScreenPoppedEvent,
 } from '../interfaces/ComponentEvents';
@@ -32,6 +33,7 @@ export class ComponentEventsObserver {
   ) {
     this.notifyComponentWillAppear = this.notifyComponentWillAppear.bind(this);
     this.notifyComponentDidAppear = this.notifyComponentDidAppear.bind(this);
+    this.notifyComponentWillDisappear = this.notifyComponentWillDisappear.bind(this);
     this.notifyComponentDidDisappear = this.notifyComponentDidDisappear.bind(this);
     this.notifyNavigationButtonPressed = this.notifyNavigationButtonPressed.bind(this);
     this.notifySearchBarUpdated = this.notifySearchBarUpdated.bind(this);
@@ -47,6 +49,9 @@ export class ComponentEventsObserver {
     this.alreadyRegistered = true;
     this.nativeEventsReceiver.registerComponentWillAppearListener(this.notifyComponentWillAppear);
     this.nativeEventsReceiver.registerComponentDidAppearListener(this.notifyComponentDidAppear);
+    this.nativeEventsReceiver.registerComponentWillDisappearListener(
+      this.notifyComponentWillDisappear
+    );
     this.nativeEventsReceiver.registerComponentDidDisappearListener(
       this.notifyComponentDidDisappear
     );
@@ -107,6 +112,10 @@ export class ComponentEventsObserver {
   notifyComponentDidAppear(event: ComponentDidAppearEvent) {
     event.passProps = this.store.getPropsForId(event.componentId);
     this.triggerOnAllListenersByComponentId(event, 'componentDidAppear');
+  }
+
+  notifyComponentWillDisappear(event: ComponentWillDisappearEvent) {
+    this.triggerOnAllListenersByComponentId(event, 'componentWillDisappear');
   }
 
   notifyComponentDidDisappear(event: ComponentDidDisappearEvent) {

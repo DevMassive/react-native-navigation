@@ -37,6 +37,9 @@
 - (void)componentDidAppear {
 }
 
+- (void)componentWillDisappear {
+}
+
 - (void)componentDidDisappear {
 }
 

@@ -36,6 +36,10 @@
     [_buttonsPresenter componentDidAppear];
 }
 
+- (void)componentWillDisappear {
+    [_topBarTitlePresenter componentWillDisappear];
+}
+
 - (void)componentDidDisappear {
     [_topBarTitlePresenter componentDidDisappear];
     [_buttonsPresenter componentDidDisappear];
