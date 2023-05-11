@@ -14,6 +14,10 @@
                  componentName:(NSString *)componentName
                  componentType:(NSString *)componentType;
 
+- (void)sendComponentWillDisappear:(NSString *)componentId
+                     componentName:(NSString *)componentName
+                     componentType:(NSString *)componentType;
+
 - (void)sendComponentDidDisappear:(NSString *)componentId
                     componentName:(NSString *)componentName
                     componentType:(NSString *)componentType;

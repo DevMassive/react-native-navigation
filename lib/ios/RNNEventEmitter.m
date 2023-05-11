@@ -14,6 +14,7 @@ static NSString *const BottomTabSelected = @"RNN.BottomTabSelected";
 static NSString *const BottomTabLongPressed = @"RNN.BottomTabLongPressed";
 static NSString *const ComponentWillAppear = @"RNN.ComponentWillAppear";
 static NSString *const ComponentDidAppear = @"RNN.ComponentDidAppear";
+static NSString *const ComponentWillDisappear = @"RNN.ComponentWillDisappear";
 static NSString *const ComponentDidDisappear = @"RNN.ComponentDidDisappear";
 static NSString *const NavigationButtonPressed = @"RNN.NavigationButtonPressed";
 static NSString *const ModalDismissed = @"RNN.ModalDismissed";
@@ -27,9 +28,9 @@ static NSString *const BottomTabPressed = @"RNN.BottomTabPressed";
 - (NSArray<NSString *> *)supportedEvents {
     return @[
         AppLaunched, CommandCompleted, BottomTabSelected, BottomTabLongPressed, BottomTabPressed,
-        ComponentWillAppear, ComponentDidAppear, ComponentDidDisappear, NavigationButtonPressed,
-        ModalDismissed, SearchBarUpdated, SearchBarCancelPressed, PreviewCompleted, ScreenPopped,
-        ModalAttemptedToDismiss
+        ComponentWillAppear, ComponentDidAppear, ComponentWillDisappear, ComponentDidDisappear,
+        NavigationButtonPressed, ModalDismissed, SearchBarUpdated, SearchBarCancelPressed,
+        PreviewCompleted, ScreenPopped, ModalAttemptedToDismiss
     ];
 }
 
@@ -58,6 +59,17 @@ static NSString *const BottomTabPressed = @"RNN.BottomTabPressed";
                  componentName:(NSString *)componentName
                  componentType:(NSString *)componentType {
     [self send:ComponentDidAppear
+          body:@{
+              @"componentId" : componentId,
+              @"componentName" : componentName,
+              @"componentType" : componentType
+          }];
+}
+
+- (void)sendComponentWillDisappear:(NSString *)componentId
+                     componentName:(NSString *)componentName
+                     componentType:(NSString *)componentType {
+    [self send:ComponentWillDisappear
           body:@{
               @"componentId" : componentId,
               @"componentName" : componentName,
