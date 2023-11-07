@@ -115,6 +115,7 @@ open class ModalAnimator @JvmOverloads constructor(
             }
 
             override fun onAnimationEnd(animation: Animator) {
+                appearing.view.alpha = 1f
                 runningAnimators.remove(appearing)
                 if (!isCancelled) listener.onEnd()
             }

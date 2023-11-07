@@ -94,14 +94,16 @@ open class StackAnimator @JvmOverloads constructor(
     ) {
         if (runningPushAnimations.containsKey(disappearing)) {
             runningPushAnimations[disappearing]!!.cancel()
+            onAnimationEnd.run()
+        } else {
+            animatePop(
+                    appearing,
+                    disappearing,
+                    disappearingOptions,
+                    additionalAnimations,
+                    onAnimationEnd
+            )
         }
-        animatePop(
-                appearing,
-                disappearing,
-                disappearingOptions,
-                additionalAnimations,
-                onAnimationEnd
-        )
     }
 
     private fun animatePop(
@@ -266,7 +268,6 @@ open class StackAnimator @JvmOverloads constructor(
             if (!disappearing.isDestroyed) disappearing.view.resetViewProperties()
         }
         set.start()
-        appearing.view.alpha = 0f
     }
 
     private fun animateSetRoot(
