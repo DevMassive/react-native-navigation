@@ -44,6 +44,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self.reactView componentWillDisappear];
+    [self componentWillDisappear];
     // Fix's momentum scroll bug
     // https://github.com/wix/react-native-navigation/issues/4325
     [self.view stopMomentumScrollViews];

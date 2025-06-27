@@ -9,6 +9,7 @@ EmitterEvents const BottomTabSelected = @"RNN.BottomTabSelected";
 EmitterEvents const BottomTabLongPressed = @"RNN.BottomTabLongPressed";
 EmitterEvents const ComponentWillAppear = @"RNN.ComponentWillAppear";
 EmitterEvents const ComponentDidAppear = @"RNN.ComponentDidAppear";
+EmitterEvents const ComponentWillDisappear = @"RNN.ComponentWillDisappear";
 EmitterEvents const ComponentDidDisappear = @"RNN.ComponentDidDisappear";
 EmitterEvents const NavigationButtonPressed = @"RNN.NavigationButtonPressed";
 EmitterEvents const ModalDismissed = @"RNN.ModalDismissed";

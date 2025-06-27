@@ -134,11 +134,19 @@
     }
 }
 
+- (void)componentWillDisappear {
+    if (_willAppear) {
+        [_eventEmitter sendComponentWillDisappear:self.componentId
+                                    componentName:self.moduleName
+                                    componentType:self.componentType];
+    }
+    _willAppear = NO;
+}
+
 - (void)componentDidDisappear {
     [_eventEmitter sendComponentDidDisappear:self.componentId
                                componentName:self.moduleName
                                componentType:self.componentType];
-    _willAppear = NO;
     _didAppear = NO;
 }
     

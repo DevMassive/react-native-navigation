@@ -40,6 +40,17 @@
           }];
 }
 
+- (void)sendComponentWillDisappear:(NSString *)componentId
+                     componentName:(NSString *)componentName
+                     componentType:(NSString *)componentType {
+    [self send:ComponentWillDisappear
+          body:@{
+              @"componentId" : componentId,
+              @"componentName" : componentName,
+              @"componentType" : componentType
+          }];
+}
+
 - (void)sendComponentDidDisappear:(NSString *)componentId
                     componentName:(NSString *)componentName
                     componentType:(NSString *)componentType {
